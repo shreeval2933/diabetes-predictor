@@ -16,117 +16,206 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - DARK MODE ONLY
-st.markdown("""
-    <style>
-    /* Dark Mode Background */
-    .main {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    }
-    .stApp {
-        background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
-    }
-    
-    /* Header - White text for dark background */
-    .big-font {
-        font-size: 50px !important;
-        font-weight: bold;
-        color: #ffffff;
-        text-align: center;
-        margin-bottom: 30px;
-        text-shadow: 2px 2px 8px rgba(102, 126, 234, 0.5);
-    }
-    
-    .prediction-box {
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin: 20px 0;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    }
-    .low-risk {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-    }
-    .medium-risk {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: white;
-    }
-    .high-risk {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-    }
-    
-    /* Info box - Dark theme */
-    .info-box {
-        background: rgba(30, 58, 138, 0.3);
-        padding: 15px;
-        border-left: 4px solid #3b82f6;
-        border-radius: 5px;
-        margin: 10px 0;
-        color: #e0f2fe;
-    }
-    .info-box h4 {
-        color: #60a5fa;
-    }
-    
-    .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        padding: 15px 30px;
-        border-radius: 10px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        transition: all 0.3s;
-    }
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
-    }
-    
-    .status-badge {
-        display: inline-block;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 14px;
-    }
-    .status-ready {
-        background: #10b981;
-        color: white;
-    }
-    
-    /* Dark mode text colors */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        color: #e0e7ff !important;
-    }
-    
-    p, div, span, label {
-        color: #cbd5e1 !important;
-    }
-    
-    [data-testid="stMetricLabel"] {
-        color: #a5b4fc !important;
-    }
-    
-    [data-testid="stMetricValue"] {
-        color: #ffffff !important;
-    }
-    
-    .streamlit-expanderHeader {
-        background-color: rgba(30, 58, 138, 0.3) !important;
-        color: #e0e7ff !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# Detect theme (Light or Dark mode)
+# Streamlit doesn't have direct theme detection, so we'll create a toggle
+if 'theme_mode' not in st.session_state:
+    st.session_state.theme_mode = 'dark'  # Default to dark mode
+
+# Custom CSS for both Light and Dark modes
+if st.session_state.theme_mode == 'dark':
+    # DARK MODE CSS
+    st.markdown("""
+        <style>
+        /* Dark Mode Background */
+        .main {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .stApp {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+        }
+        
+        /* Header - White text for dark background */
+        .big-font {
+            font-size: 50px !important;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(102, 126, 234, 0.5);
+        }
+        
+        .prediction-box {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+        .low-risk {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .medium-risk {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        .high-risk {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        /* Info box - Dark theme */
+        .info-box {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 15px;
+            border-left: 4px solid #3b82f6;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #e0f2fe;
+        }
+        .info-box h4 {
+            color: #60a5fa;
+        }
+        
+        .stButton>button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+        .stButton>button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-ready {
+            background: #10b981;
+            color: white;
+        }
+        
+        /* Dark mode text colors */
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: #e0e7ff !important;
+        }
+        
+        p, div, span, label {
+            color: #cbd5e1 !important;
+        }
+        
+        [data-testid="stMetricLabel"] {
+            color: #a5b4fc !important;
+        }
+        
+        [data-testid="stMetricValue"] {
+            color: #ffffff !important;
+        }
+        
+        .streamlit-expanderHeader {
+            background-color: rgba(30, 58, 138, 0.3) !important;
+            color: #e0e7ff !important;
+        }
+        
+        .theme-toggle {
+            color: #e0e7ff;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+else:
+    # LIGHT MODE CSS (Original)
+    st.markdown("""
+        <style>
+        .main {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .stApp {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .big-font {
+            font-size: 50px !important;
+            font-weight: bold;
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .prediction-box {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .low-risk {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .medium-risk {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        .high-risk {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .info-box {
+            background: #e0f2fe;
+            padding: 15px;
+            border-left: 4px solid #0284c7;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .stButton>button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .stButton>button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-ready {
+            background: #10b981;
+            color: white;
+        }
+        
+        .theme-toggle {
+            color: #1e3a8a;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 @st.cache_resource
 def load_pretrained_model(model_path='models/bn_model.pkl'):
@@ -248,27 +337,56 @@ def predict_diabetes(model, evidence):
         st.error(f"Prediction error: {str(e)}")
         return 0.5
 
-def create_gauge_chart(probability):
-    """Create a gauge chart for risk visualization - Dark theme"""
+def create_gauge_chart(probability, theme_mode):
+    """Create a gauge chart for risk visualization"""
+    if theme_mode == 'dark':
+        # Dark theme colors
+        title_color = '#e0e7ff'
+        number_color = '#ffffff'
+        tick_color = "#cbd5e1"
+        bg_color = "#1e293b"
+        border_color = "#475569"
+        steps = [
+            {'range': [0, 30], 'color': '#064e3b'},
+            {'range': [30, 70], 'color': '#78350f'},
+            {'range': [70, 100], 'color': '#7f1d1d'}
+        ]
+        threshold_color = "#a78bfa"
+        paper_bgcolor = "#0f0f1e"
+        plot_bgcolor = "#0f0f1e"
+        font_color = "#e0e7ff"
+    else:
+        # Light theme colors
+        title_color = '#1e3a8a'
+        number_color = '#1e3a8a'
+        tick_color = "#1e3a8a"
+        bg_color = "white"
+        border_color = "#e5e7eb"
+        steps = [
+            {'range': [0, 30], 'color': '#dcfce7'},
+            {'range': [30, 70], 'color': '#fef9c3'},
+            {'range': [70, 100], 'color': '#fee2e2'}
+        ]
+        threshold_color = "#7c3aed"
+        paper_bgcolor = "rgba(0,0,0,0)"
+        plot_bgcolor = "rgba(0,0,0,0)"
+        font_color = "#1e3a8a"
+    
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=probability * 100,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'color': '#e0e7ff', 'family': 'Arial Black'}},
-        number={'suffix': "%", 'font': {'size': 50, 'color': '#ffffff', 'family': 'Arial Black'}},
+        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'color': title_color, 'family': 'Arial Black'}},
+        number={'suffix': "%", 'font': {'size': 50, 'color': number_color, 'family': 'Arial Black'}},
         gauge={
-            'axis': {'range': [None, 100], 'tickwidth': 2, 'tickcolor': "#cbd5e1"},
+            'axis': {'range': [None, 100], 'tickwidth': 2, 'tickcolor': tick_color},
             'bar': {'color': "#ef4444" if probability > 0.5 else "#3b82f6", 'thickness': 0.8},
-            'bgcolor': "#1e293b",
+            'bgcolor': bg_color,
             'borderwidth': 3,
-            'bordercolor': "#475569",
-            'steps': [
-                {'range': [0, 30], 'color': '#064e3b'},
-                {'range': [30, 70], 'color': '#78350f'},
-                {'range': [70, 100], 'color': '#7f1d1d'}
-            ],
+            'bordercolor': border_color,
+            'steps': steps,
             'threshold': {
-                'line': {'color': "#a78bfa", 'width': 4},
+                'line': {'color': threshold_color, 'width': 4},
                 'thickness': 0.75,
                 'value': probability * 100
             }
@@ -276,22 +394,35 @@ def create_gauge_chart(probability):
     ))
     
     fig.update_layout(
-        paper_bgcolor="#0f0f1e",
-        plot_bgcolor="#0f0f1e",
-        font={'color': "#e0e7ff", 'family': "Arial"},
+        paper_bgcolor=paper_bgcolor,
+        plot_bgcolor=plot_bgcolor,
+        font={'color': font_color, 'family': "Arial"},
         height=400,
         margin=dict(l=20, r=20, t=80, b=20)
     )
     
     return fig
 
-def create_feature_bars(data):
-    """Create horizontal bar chart for input features - Dark theme"""
+def create_feature_bars(data, theme_mode):
+    """Create horizontal bar chart for input features"""
     features = list(data.keys())
     values = list(data.values())
     
     colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', 
               '#4facfe', '#00f2fe', '#43e97b', '#38f9d7']
+    
+    if theme_mode == 'dark':
+        title_color = '#e0e7ff'
+        tick_color = '#cbd5e1'
+        line_color = '#1e293b'
+        paper_bgcolor = '#0f0f1e'
+        plot_bgcolor = '#0f0f1e'
+    else:
+        title_color = '#1e3a8a'
+        tick_color = '#1e3a8a'
+        line_color = 'white'
+        paper_bgcolor = 'rgba(0,0,0,0)'
+        plot_bgcolor = 'rgba(0,0,0,0)'
     
     fig = go.Figure(go.Bar(
         y=features,
@@ -302,29 +433,43 @@ def create_feature_bars(data):
         textfont=dict(size=14, color='white', family='Arial Black'),
         marker=dict(
             color=colors,
-            line=dict(color='#1e293b', width=2)
+            line=dict(color=line_color, width=2)
         ),
         hovertemplate='<b>%{y}</b><br>Value: %{text}<extra></extra>'
     ))
     
     fig.update_layout(
         title="Your Health Profile",
-        title_font=dict(size=20, color='#e0e7ff', family='Arial Black'),
+        title_font=dict(size=20, color=title_color, family='Arial Black'),
         showlegend=False,
         height=500,
         xaxis=dict(showticklabels=False, showgrid=False),
-        yaxis=dict(tickfont=dict(size=14, color='#cbd5e1', family='Arial')),
-        paper_bgcolor='#0f0f1e',
-        plot_bgcolor='#0f0f1e',
+        yaxis=dict(tickfont=dict(size=14, color=tick_color, family='Arial')),
+        paper_bgcolor=paper_bgcolor,
+        plot_bgcolor=plot_bgcolor,
         margin=dict(l=20, r=20, t=60, b=20)
     )
     
     return fig
 
 def main():
+    # Theme toggle in sidebar
+    with st.sidebar:
+        st.markdown("---")
+        theme_col1, theme_col2 = st.columns([3, 1])
+        with theme_col1:
+            st.markdown('<p class="theme-toggle">🌓 Theme Mode</p>', unsafe_allow_html=True)
+        with theme_col2:
+            if st.button("🔄"):
+                st.session_state.theme_mode = 'light' if st.session_state.theme_mode == 'dark' else 'dark'
+                st.rerun()
+        st.markdown("---")
+    
     # Header
     st.markdown('<p class="big-font">🏥 PIMA INDIANS DIABETES RISK DECISION-MAKING USING BAYESIAN NETWORK </p>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center; color: #94a3b8; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
+    
+    subtitle_color = '#94a3b8' if st.session_state.theme_mode == 'dark' else '#64748b'
+    st.markdown(f'<p style="text-align: center; color: {subtitle_color}; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
     
     # Load pre-trained model
     with st.spinner("🔄 Loading pre-trained model..."):
@@ -437,7 +582,7 @@ def main():
     with col2:
         st.markdown("### 🎯 Health Profile Visualization")
         discrete_data = discretize_input(input_data)
-        fig_bars = create_feature_bars(discrete_data)
+        fig_bars = create_feature_bars(discrete_data, st.session_state.theme_mode)
         st.plotly_chart(fig_bars, use_container_width=True)
     
     # Prediction section
@@ -457,7 +602,7 @@ def main():
             
             with res_col2:
                 # Gauge chart
-                fig_gauge = create_gauge_chart(probability)
+                fig_gauge = create_gauge_chart(probability, st.session_state.theme_mode)
                 st.plotly_chart(fig_gauge, use_container_width=True)
                 
                 # Risk classification with detailed message
@@ -580,7 +725,6 @@ def main():
                         st.markdown(factor)
                 else:
                     st.info("Consider improving protective factors")
-    
     # Footer
     st.markdown("---")
     st.markdown("""
