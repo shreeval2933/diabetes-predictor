@@ -10,29 +10,34 @@ warnings.filterwarnings('ignore')
 
 # Page configuration
 st.set_page_config(
-    page_title="Diabetes Risk Predictor",
+    page_title="PIMA INDIANS DIABETES RISK DECISION-MAKING USING BAYESIAN NETWORK",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for attractive UI
+# Custom CSS for dark mode with better text visibility
 st.markdown("""
     <style>
+    /* Main background - Dark mode */
     .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     }
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
     }
+    
+    /* Header text - Light color for dark background */
     .big-font {
         font-size: 50px !important;
         font-weight: bold;
-        color: #1e3a8a;
+        color: #ffffff;
         text-align: center;
         margin-bottom: 30px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        text-shadow: 2px 2px 8px rgba(102, 126, 234, 0.5);
     }
+    
+    /* Prediction boxes with better contrast */
     .prediction-box {
         padding: 30px;
         border-radius: 15px;
@@ -40,27 +45,39 @@ st.markdown("""
         font-size: 24px;
         font-weight: bold;
         margin: 20px 0;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
     }
     .low-risk {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
     }
     .medium-risk {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
     }
     .high-risk {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
     }
+    
+    /* Info box - Dark mode with light text */
     .info-box {
-        background: #e0f2fe;
+        background: rgba(30, 58, 138, 0.3);
         padding: 15px;
-        border-left: 4px solid #0284c7;
+        border-left: 4px solid #3b82f6;
         border-radius: 5px;
         margin: 10px 0;
+        color: #e0f2fe;
     }
+    .info-box h4 {
+        color: #60a5fa;
+        margin-bottom: 10px;
+    }
+    .info-box ul {
+        color: #e0f2fe;
+    }
+    
+    /* Button styling */
     .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -69,13 +86,15 @@ st.markdown("""
         padding: 15px 30px;
         border-radius: 10px;
         border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         transition: all 0.3s;
     }
     .stButton>button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
     }
+    
+    /* Status badge */
     .status-badge {
         display: inline-block;
         padding: 8px 16px;
@@ -86,6 +105,59 @@ st.markdown("""
     .status-ready {
         background: #10b981;
         color: white;
+    }
+    
+    /* Sidebar styling for dark mode */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    }
+    section[data-testid="stSidebar"] * {
+        color: #e0e7ff !important;
+    }
+    
+    /* Metric labels and values - Light text */
+    [data-testid="stMetricLabel"] {
+        color: #a5b4fc !important;
+    }
+    [data-testid="stMetricValue"] {
+        color: #ffffff !important;
+    }
+    
+    /* Headers and text */
+    h1, h2, h3, h4, h5, h6 {
+        color: #e0e7ff !important;
+    }
+    p, div, span, label {
+        color: #cbd5e1 !important;
+    }
+    
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        background-color: rgba(30, 58, 138, 0.3) !important;
+        color: #e0e7ff !important;
+    }
+    
+    /* DataFrame styling */
+    .dataframe {
+        color: #e0e7ff !important;
+    }
+    
+    /* Success/Warning/Error messages */
+    .stSuccess {
+        background-color: rgba(16, 185, 129, 0.2) !important;
+        color: #6ee7b7 !important;
+    }
+    .stWarning {
+        background-color: rgba(245, 158, 11, 0.2) !important;
+        color: #fcd34d !important;
+    }
+    .stError {
+        background-color: rgba(239, 68, 68, 0.2) !important;
+        color: #fca5a5 !important;
+    }
+    .stInfo {
+        background-color: rgba(59, 130, 246, 0.2) !important;
+        color: #93c5fd !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -211,26 +283,26 @@ def predict_diabetes(model, evidence):
         return 0.5
 
 def create_gauge_chart(probability):
-    """Create a gauge chart for risk visualization"""
+    """Create a gauge chart for risk visualization - Dark mode"""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=probability * 100,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'color': '#1e3a8a', 'family': 'Arial Black'}},
-        number={'suffix': "%", 'font': {'size': 50, 'color': '#1e3a8a', 'family': 'Arial Black'}},
+        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'color': '#e0e7ff', 'family': 'Arial Black'}},
+        number={'suffix': "%", 'font': {'size': 50, 'color': '#ffffff', 'family': 'Arial Black'}},
         gauge={
-            'axis': {'range': [None, 100], 'tickwidth': 2, 'tickcolor': "#1e3a8a"},
+            'axis': {'range': [None, 100], 'tickwidth': 2, 'tickcolor': "#cbd5e1"},
             'bar': {'color': "#ef4444" if probability > 0.5 else "#3b82f6", 'thickness': 0.8},
-            'bgcolor': "white",
+            'bgcolor': "#1e293b",
             'borderwidth': 3,
-            'bordercolor': "#e5e7eb",
+            'bordercolor': "#475569",
             'steps': [
-                {'range': [0, 30], 'color': '#dcfce7'},
-                {'range': [30, 70], 'color': '#fef9c3'},
-                {'range': [70, 100], 'color': '#fee2e2'}
+                {'range': [0, 30], 'color': '#064e3b'},
+                {'range': [30, 70], 'color': '#78350f'},
+                {'range': [70, 100], 'color': '#7f1d1d'}
             ],
             'threshold': {
-                'line': {'color': "#7c3aed", 'width': 4},
+                'line': {'color': "#a78bfa", 'width': 4},
                 'thickness': 0.75,
                 'value': probability * 100
             }
@@ -238,9 +310,9 @@ def create_gauge_chart(probability):
     ))
     
     fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "#1e3a8a", 'family': "Arial"},
+        paper_bgcolor="#0f0f1e",
+        plot_bgcolor="#0f0f1e",
+        font={'color': "#e0e7ff", 'family': "Arial"},
         height=400,
         margin=dict(l=20, r=20, t=80, b=20)
     )
@@ -248,7 +320,7 @@ def create_gauge_chart(probability):
     return fig
 
 def create_feature_bars(data):
-    """Create horizontal bar chart for input features"""
+    """Create horizontal bar chart for input features - Dark mode"""
     features = list(data.keys())
     values = list(data.values())
     
@@ -264,20 +336,20 @@ def create_feature_bars(data):
         textfont=dict(size=14, color='white', family='Arial Black'),
         marker=dict(
             color=colors,
-            line=dict(color='white', width=2)
+            line=dict(color='#1e293b', width=2)
         ),
         hovertemplate='<b>%{y}</b><br>Value: %{text}<extra></extra>'
     ))
     
     fig.update_layout(
         title="Your Health Profile",
-        title_font=dict(size=20, color='#1e3a8a', family='Arial Black'),
+        title_font=dict(size=20, color='#e0e7ff', family='Arial Black'),
         showlegend=False,
         height=500,
         xaxis=dict(showticklabels=False, showgrid=False),
-        yaxis=dict(tickfont=dict(size=14, color='#1e3a8a', family='Arial')),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(tickfont=dict(size=14, color='#cbd5e1', family='Arial')),
+        paper_bgcolor='#0f0f1e',
+        plot_bgcolor='#0f0f1e',
         margin=dict(l=20, r=20, t=60, b=20)
     )
     
@@ -285,8 +357,8 @@ def create_feature_bars(data):
 
 def main():
     # Header
-    st.markdown('<p class="big-font">🏥 Diabetes Risk Predictor</p>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center; color: #64748b; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">🏥 PIMA INDIANS DIABETES RISK DECISION-MAKING USING BAYESIAN NETWORK </p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; color: #94a3b8; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
     
     # Load pre-trained model
     with st.spinner("🔄 Loading pre-trained model..."):
@@ -546,7 +618,7 @@ def main():
     # Footer
     st.markdown("---")
     st.markdown("""
-    <div style='text-align: center; color: #64748b; padding: 20px;'>
+    <div style='text-align: center; color: #94a3b8; padding: 20px;'>
         <p><strong>⚠️ Disclaimer:</strong> This tool is for educational and informational purposes only. 
         It should NOT be used as a substitute for professional medical advice, diagnosis, or treatment. 
         Always seek the advice of your physician or other qualified health provider with any questions 
