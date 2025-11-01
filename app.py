@@ -26,9 +26,13 @@ st.markdown("""
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
     
-    /* Added rule for dark mode background */
+    /* 🌙 Dark mode overrides */
     [data-theme="dark"] .stApp {
-        background-color: black !important;
+        background-color: #000000 !important;
+        background-image: none !important; 
+    }
+    [data-theme="dark"] .main {
+        background-color: #000000 !important;
         background-image: none !important; 
     }
 
