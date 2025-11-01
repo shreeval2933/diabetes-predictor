@@ -16,10 +16,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for dark mode with better text visibility
+# Custom CSS - DARK MODE ONLY
 st.markdown("""
     <style>
-    /* Main background - Dark mode */
+    /* Dark Mode Background */
     .main {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     }
@@ -27,7 +27,7 @@ st.markdown("""
         background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
     }
     
-    /* Header text - Light color for dark background */
+    /* Header - White text for dark background */
     .big-font {
         font-size: 50px !important;
         font-weight: bold;
@@ -37,7 +37,6 @@ st.markdown("""
         text-shadow: 2px 2px 8px rgba(102, 126, 234, 0.5);
     }
     
-    /* Prediction boxes with better contrast */
     .prediction-box {
         padding: 30px;
         border-radius: 15px;
@@ -52,15 +51,15 @@ st.markdown("""
         color: white;
     }
     .medium-risk {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         color: white;
     }
     .high-risk {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         color: white;
     }
     
-    /* Info box - Dark mode with light text */
+    /* Info box - Dark theme */
     .info-box {
         background: rgba(30, 58, 138, 0.3);
         padding: 15px;
@@ -71,13 +70,8 @@ st.markdown("""
     }
     .info-box h4 {
         color: #60a5fa;
-        margin-bottom: 10px;
-    }
-    .info-box ul {
-        color: #e0f2fe;
     }
     
-    /* Button styling */
     .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -94,7 +88,6 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
     }
     
-    /* Status badge */
     .status-badge {
         display: inline-block;
         padding: 8px 16px;
@@ -107,57 +100,30 @@ st.markdown("""
         color: white;
     }
     
-    /* Sidebar styling for dark mode */
+    /* Dark mode text colors */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
     }
-    section[data-testid="stSidebar"] * {
-        color: #e0e7ff !important;
-    }
     
-    /* Metric labels and values - Light text */
-    [data-testid="stMetricLabel"] {
-        color: #a5b4fc !important;
-    }
-    [data-testid="stMetricValue"] {
-        color: #ffffff !important;
-    }
-    
-    /* Headers and text */
     h1, h2, h3, h4, h5, h6 {
         color: #e0e7ff !important;
     }
+    
     p, div, span, label {
         color: #cbd5e1 !important;
     }
     
-    /* Expander styling */
+    [data-testid="stMetricLabel"] {
+        color: #a5b4fc !important;
+    }
+    
+    [data-testid="stMetricValue"] {
+        color: #ffffff !important;
+    }
+    
     .streamlit-expanderHeader {
         background-color: rgba(30, 58, 138, 0.3) !important;
         color: #e0e7ff !important;
-    }
-    
-    /* DataFrame styling */
-    .dataframe {
-        color: #e0e7ff !important;
-    }
-    
-    /* Success/Warning/Error messages */
-    .stSuccess {
-        background-color: rgba(16, 185, 129, 0.2) !important;
-        color: #6ee7b7 !important;
-    }
-    .stWarning {
-        background-color: rgba(245, 158, 11, 0.2) !important;
-        color: #fcd34d !important;
-    }
-    .stError {
-        background-color: rgba(239, 68, 68, 0.2) !important;
-        color: #fca5a5 !important;
-    }
-    .stInfo {
-        background-color: rgba(59, 130, 246, 0.2) !important;
-        color: #93c5fd !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -283,7 +249,7 @@ def predict_diabetes(model, evidence):
         return 0.5
 
 def create_gauge_chart(probability):
-    """Create a gauge chart for risk visualization - Dark mode"""
+    """Create a gauge chart for risk visualization - Dark theme"""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=probability * 100,
@@ -320,7 +286,7 @@ def create_gauge_chart(probability):
     return fig
 
 def create_feature_bars(data):
-    """Create horizontal bar chart for input features - Dark mode"""
+    """Create horizontal bar chart for input features - Dark theme"""
     features = list(data.keys())
     values = list(data.values())
     
