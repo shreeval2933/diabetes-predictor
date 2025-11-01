@@ -16,206 +16,288 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Detect theme (Light or Dark mode)
-# Streamlit doesn't have direct theme detection, so we'll create a toggle
-if 'theme_mode' not in st.session_state:
-    st.session_state.theme_mode = 'dark'  # Default to dark mode
-
-# Custom CSS for both Light and Dark modes
-if st.session_state.theme_mode == 'dark':
-    # DARK MODE CSS
-    st.markdown("""
-        <style>
-        /* Dark Mode Background */
-        .main {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-        .stApp {
-            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+# Custom CSS with proper light and dark mode support
+st.markdown("""
+    <style>
+    /* ============================================
+       DARK MODE STYLES (DEFAULT)
+       ============================================ */
+    
+    /* Main background - Dark mode */
+    [data-testid="stAppViewContainer"] {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    [data-testid="stHeader"] {
+        background: rgba(15, 23, 42, 0.8);
+    }
+    
+    /* Sidebar - Dark mode */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+    }
+    
+    /* Text colors - Dark mode */
+    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
+        color: #f1f5f9 !important;
+    }
+    
+    .main p, .main div, .main span, .main label {
+        color: #cbd5e1 !important;
+    }
+    
+    [data-testid="stSidebar"] * {
+        color: #e2e8f0 !important;
+    }
+    
+    /* Metric styling - Dark mode */
+    [data-testid="stMetricLabel"] {
+        color: #94a3b8 !important;
+    }
+    
+    [data-testid="stMetricValue"] {
+        color: #f1f5f9 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Header text */
+    .big-font {
+        font-size: 50px !important;
+        font-weight: bold;
+        color: #f1f5f9;
+        text-align: center;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 8px rgba(99, 102, 241, 0.5);
+    }
+    
+    /* Prediction boxes */
+    .prediction-box {
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 20px 0;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .low-risk {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+    .medium-risk {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+    .high-risk {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+    
+    /* Info box - Dark mode */
+    .info-box {
+        background: rgba(30, 58, 138, 0.25);
+        padding: 20px;
+        border-left: 4px solid #3b82f6;
+        border-radius: 8px;
+        margin: 10px 0;
+        backdrop-filter: blur(10px);
+    }
+    .info-box h4 {
+        color: #60a5fa !important;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    .info-box ul {
+        color: #cbd5e1 !important;
+    }
+    .info-box li {
+        color: #cbd5e1 !important;
+        margin: 8px 0;
+    }
+    
+    /* Button styling */
+    .stButton>button {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white !important;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 30px;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(99, 102, 241, 0.5);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+    
+    /* Status badge */
+    .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .status-ready {
+        background: #10b981;
+        color: white;
+    }
+    
+    /* Expander styling - Dark mode */
+    .streamlit-expanderHeader {
+        background-color: rgba(51, 65, 85, 0.5) !important;
+        color: #f1f5f9 !important;
+        border-radius: 8px;
+    }
+    
+    /* Alert boxes - Dark mode */
+    .stSuccess {
+        background-color: rgba(16, 185, 129, 0.15) !important;
+        color: #6ee7b7 !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .stWarning {
+        background-color: rgba(245, 158, 11, 0.15) !important;
+        color: #fbbf24 !important;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .stError {
+        background-color: rgba(239, 68, 68, 0.15) !important;
+        color: #fca5a5 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .stInfo {
+        background-color: rgba(59, 130, 246, 0.15) !important;
+        color: #93c5fd !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Input widgets - Dark mode */
+    .stSlider > div > div > div {
+        background-color: #334155;
+    }
+    
+    /* Dataframe styling - Dark mode */
+    [data-testid="stDataFrame"] {
+        background-color: rgba(30, 41, 59, 0.5);
+    }
+    
+    /* ============================================
+       LIGHT MODE STYLES (MEDIA QUERY)
+       ============================================ */
+    
+    @media (prefers-color-scheme: light) {
+        /* Main background - Light mode */
+        [data-testid="stAppViewContainer"] {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
         
-        /* Header - White text for dark background */
-        .big-font {
-            font-size: 50px !important;
-            font-weight: bold;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 8px rgba(102, 126, 234, 0.5);
+        [data-testid="stHeader"] {
+            background: rgba(248, 250, 252, 0.8);
         }
         
-        .prediction-box {
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-        }
-        .low-risk {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-        .medium-risk {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-        }
-        .high-risk {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+        /* Sidebar - Light mode */
+        [data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+            border-right: 1px solid #e2e8f0;
         }
         
-        /* Info box - Dark theme */
-        .info-box {
-            background: rgba(30, 58, 138, 0.3);
-            padding: 15px;
-            border-left: 4px solid #3b82f6;
-            border-radius: 5px;
-            margin: 10px 0;
-            color: #e0f2fe;
-        }
-        .info-box h4 {
-            color: #60a5fa;
+        /* Text colors - Light mode */
+        .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
+            color: #0f172a !important;
         }
         
-        .stButton>button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 15px 30px;
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-        }
-        .stButton>button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
+        .main p, .main div, .main span, .main label {
+            color: #475569 !important;
         }
         
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .status-ready {
-            background: #10b981;
-            color: white;
+        [data-testid="stSidebar"] * {
+            color: #1e293b !important;
         }
         
-        /* Dark mode text colors */
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            color: #e0e7ff !important;
-        }
-        
-        p, div, span, label {
-            color: #cbd5e1 !important;
-        }
-        
+        /* Metric styling - Light mode */
         [data-testid="stMetricLabel"] {
-            color: #a5b4fc !important;
+            color: #64748b !important;
         }
         
         [data-testid="stMetricValue"] {
-            color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 600 !important;
         }
         
-        .streamlit-expanderHeader {
-            background-color: rgba(30, 58, 138, 0.3) !important;
-            color: #e0e7ff !important;
-        }
-        
-        .theme-toggle {
-            color: #e0e7ff;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-else:
-    # LIGHT MODE CSS (Original)
-    st.markdown("""
-        <style>
-        .main {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .stApp {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
+        /* Header text - Light mode */
         .big-font {
-            font-size: 50px !important;
-            font-weight: bold;
-            color: #1e3a8a;
-            text-align: center;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        .prediction-box {
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .low-risk {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-        .medium-risk {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-        }
-        .high-risk {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-        .info-box {
-            background: #e0f2fe;
-            padding: 15px;
-            border-left: 4px solid #0284c7;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        .stButton>button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 15px 30px;
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        .stButton>button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .status-ready {
-            background: #10b981;
-            color: white;
+            color: #0f172a;
+            text-shadow: 2px 2px 8px rgba(99, 102, 241, 0.2);
         }
         
-        .theme-toggle {
-            color: #1e3a8a;
+        /* Info box - Light mode */
+        .info-box {
+            background: rgba(219, 234, 254, 0.8);
+            border-left: 4px solid #3b82f6;
         }
-        </style>
-    """, unsafe_allow_html=True)
+        .info-box h4 {
+            color: #1e40af !important;
+        }
+        .info-box ul, .info-box li {
+            color: #334155 !important;
+        }
+        
+        /* Button styling - Light mode */
+        .stButton>button:hover {
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        /* Expander styling - Light mode */
+        .streamlit-expanderHeader {
+            background-color: rgba(241, 245, 249, 0.8) !important;
+            color: #0f172a !important;
+            border: 1px solid #e2e8f0;
+        }
+        
+        /* Alert boxes - Light mode */
+        .stSuccess {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: #047857 !important;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .stWarning {
+            background-color: rgba(245, 158, 11, 0.1) !important;
+            color: #b45309 !important;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .stError {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            color: #b91c1c !important;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .stInfo {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            color: #1e40af !important;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Dataframe styling - Light mode */
+        [data-testid="stDataFrame"] {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+        }
+    }
+    
+    /* Common styles for both modes */
+    .prediction-box {
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 @st.cache_resource
 def load_pretrained_model(model_path='models/bn_model.pkl'):
@@ -337,56 +419,25 @@ def predict_diabetes(model, evidence):
         st.error(f"Prediction error: {str(e)}")
         return 0.5
 
-def create_gauge_chart(probability, theme_mode):
-    """Create a gauge chart for risk visualization"""
-    if theme_mode == 'dark':
-        # Dark theme colors
-        title_color = '#e0e7ff'
-        number_color = '#ffffff'
-        tick_color = "#cbd5e1"
-        bg_color = "#1e293b"
-        border_color = "#475569"
-        steps = [
-            {'range': [0, 30], 'color': '#064e3b'},
-            {'range': [30, 70], 'color': '#78350f'},
-            {'range': [70, 100], 'color': '#7f1d1d'}
-        ]
-        threshold_color = "#a78bfa"
-        paper_bgcolor = "#0f0f1e"
-        plot_bgcolor = "#0f0f1e"
-        font_color = "#e0e7ff"
-    else:
-        # Light theme colors
-        title_color = '#1e3a8a'
-        number_color = '#1e3a8a'
-        tick_color = "#1e3a8a"
-        bg_color = "white"
-        border_color = "#e5e7eb"
-        steps = [
-            {'range': [0, 30], 'color': '#dcfce7'},
-            {'range': [30, 70], 'color': '#fef9c3'},
-            {'range': [70, 100], 'color': '#fee2e2'}
-        ]
-        threshold_color = "#7c3aed"
-        paper_bgcolor = "rgba(0,0,0,0)"
-        plot_bgcolor = "rgba(0,0,0,0)"
-        font_color = "#1e3a8a"
-    
+def create_gauge_chart(probability):
+    """Create a gauge chart for risk visualization - Adapts to theme"""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=probability * 100,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'color': title_color, 'family': 'Arial Black'}},
-        number={'suffix': "%", 'font': {'size': 50, 'color': number_color, 'family': 'Arial Black'}},
+        title={'text': "Diabetes Risk Score", 'font': {'size': 24, 'family': 'Arial Black'}},
+        number={'suffix': "%", 'font': {'size': 50, 'family': 'Arial Black'}},
         gauge={
-            'axis': {'range': [None, 100], 'tickwidth': 2, 'tickcolor': tick_color},
+            'axis': {'range': [None, 100], 'tickwidth': 2},
             'bar': {'color': "#ef4444" if probability > 0.5 else "#3b82f6", 'thickness': 0.8},
-            'bgcolor': bg_color,
             'borderwidth': 3,
-            'bordercolor': border_color,
-            'steps': steps,
+            'steps': [
+                {'range': [0, 30], 'color': 'rgba(16, 185, 129, 0.3)'},
+                {'range': [30, 70], 'color': 'rgba(245, 158, 11, 0.3)'},
+                {'range': [70, 100], 'color': 'rgba(239, 68, 68, 0.3)'}
+            ],
             'threshold': {
-                'line': {'color': threshold_color, 'width': 4},
+                'line': {'color': "#a78bfa", 'width': 4},
                 'thickness': 0.75,
                 'value': probability * 100
             }
@@ -394,35 +445,22 @@ def create_gauge_chart(probability, theme_mode):
     ))
     
     fig.update_layout(
-        paper_bgcolor=paper_bgcolor,
-        plot_bgcolor=plot_bgcolor,
-        font={'color': font_color, 'family': "Arial"},
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font={'family': "Arial"},
         height=400,
         margin=dict(l=20, r=20, t=80, b=20)
     )
     
     return fig
 
-def create_feature_bars(data, theme_mode):
-    """Create horizontal bar chart for input features"""
+def create_feature_bars(data):
+    """Create horizontal bar chart for input features - Adapts to theme"""
     features = list(data.keys())
     values = list(data.values())
     
     colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', 
               '#4facfe', '#00f2fe', '#43e97b', '#38f9d7']
-    
-    if theme_mode == 'dark':
-        title_color = '#e0e7ff'
-        tick_color = '#cbd5e1'
-        line_color = '#1e293b'
-        paper_bgcolor = '#0f0f1e'
-        plot_bgcolor = '#0f0f1e'
-    else:
-        title_color = '#1e3a8a'
-        tick_color = '#1e3a8a'
-        line_color = 'white'
-        paper_bgcolor = 'rgba(0,0,0,0)'
-        plot_bgcolor = 'rgba(0,0,0,0)'
     
     fig = go.Figure(go.Bar(
         y=features,
@@ -433,43 +471,29 @@ def create_feature_bars(data, theme_mode):
         textfont=dict(size=14, color='white', family='Arial Black'),
         marker=dict(
             color=colors,
-            line=dict(color=line_color, width=2)
+            line=dict(width=2)
         ),
         hovertemplate='<b>%{y}</b><br>Value: %{text}<extra></extra>'
     ))
     
     fig.update_layout(
         title="Your Health Profile",
-        title_font=dict(size=20, color=title_color, family='Arial Black'),
+        title_font=dict(size=20, family='Arial Black'),
         showlegend=False,
         height=500,
         xaxis=dict(showticklabels=False, showgrid=False),
-        yaxis=dict(tickfont=dict(size=14, color=tick_color, family='Arial')),
-        paper_bgcolor=paper_bgcolor,
-        plot_bgcolor=plot_bgcolor,
+        yaxis=dict(tickfont=dict(size=14, family='Arial')),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=20, r=20, t=60, b=20)
     )
     
     return fig
 
 def main():
-    # Theme toggle in sidebar
-    with st.sidebar:
-        st.markdown("---")
-        theme_col1, theme_col2 = st.columns([3, 1])
-        with theme_col1:
-            st.markdown('<p class="theme-toggle">🌓 Theme Mode</p>', unsafe_allow_html=True)
-        with theme_col2:
-            if st.button("🔄"):
-                st.session_state.theme_mode = 'light' if st.session_state.theme_mode == 'dark' else 'dark'
-                st.rerun()
-        st.markdown("---")
-    
     # Header
     st.markdown('<p class="big-font">🏥 PIMA INDIANS DIABETES RISK DECISION-MAKING USING BAYESIAN NETWORK </p>', unsafe_allow_html=True)
-    
-    subtitle_color = '#94a3b8' if st.session_state.theme_mode == 'dark' else '#64748b'
-    st.markdown(f'<p style="text-align: center; color: {subtitle_color}; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; font-size: 18px; margin-top: -20px;">Powered by Pre-trained Bayesian Network AI</p>', unsafe_allow_html=True)
     
     # Load pre-trained model
     with st.spinner("🔄 Loading pre-trained model..."):
@@ -582,7 +606,7 @@ def main():
     with col2:
         st.markdown("### 🎯 Health Profile Visualization")
         discrete_data = discretize_input(input_data)
-        fig_bars = create_feature_bars(discrete_data, st.session_state.theme_mode)
+        fig_bars = create_feature_bars(discrete_data)
         st.plotly_chart(fig_bars, use_container_width=True)
     
     # Prediction section
@@ -602,7 +626,7 @@ def main():
             
             with res_col2:
                 # Gauge chart
-                fig_gauge = create_gauge_chart(probability, st.session_state.theme_mode)
+                fig_gauge = create_gauge_chart(probability)
                 st.plotly_chart(fig_gauge, use_container_width=True)
                 
                 # Risk classification with detailed message
