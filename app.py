@@ -18,87 +18,71 @@ st.set_page_config(
 
 # Custom CSS for attractive UI
 st.markdown("""
-    <style>
-    .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    }
-    
-    /* 🌙 Dark mode overrides */
-    [data-theme="dark"] .stApp {
-        background-color: #000000 !important;
-        background-image: none !important; 
-    }
-    [data-theme="dark"] .main {
-        background-color: #000000 !important;
-        background-image: none !important; 
-    }
+<style>
+/* Default light-mode backgrounds (keep your gradients) */
+.main, main, section.main, div[data-testid="stMain"], div[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
 
-    .big-font {
-        font-size: 50px !important;
-        font-weight: bold;
-        color: #1e3a8a;
-        text-align: center;
-        margin-bottom: 30px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-    .prediction-box {
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin: 20px 0;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    .low-risk {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-    }
-    .medium-risk {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: white;
-    }
-    .high-risk {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-    }
-    .info-box {
-        background: #e0f2fe;
-        padding: 15px;
-        border-left: 4px solid #0284c7;
-        border-radius: 5px;
-        margin: 10px 0;
-    }
-    .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        padding: 15px 30px;
-        border-radius: 10px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    }
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 14px;
-    }
-    .status-ready {
-        background: #10b981;
-        color: white;
-    }
-    </style>
+/* Keep the stApp background in light mode */
+.stApp, body, div[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+}
+
+/* ===== Robust dark-mode overrides: make everything truly black ===== */
+body[data-theme="dark"] .stApp,
+body[data-theme="dark"] div[data-testid="stAppViewContainer"],
+body[data-theme="dark"] div[data-testid="stMain"],
+body[data-theme="dark"] main,
+body[data-theme="dark"] section.main,
+body[data-theme="dark"] .main {
+    background-color: #000000 !important;
+    background-image: none !important;
+}
+
+/* Also force the page container and content to be black to avoid gradient bleed */
+body[data-theme="dark"] .css-1outpf7, /* streamlit page container variant */
+body[data-theme="dark"] .css-1v0mbdj, /* another common variant */
+body[data-theme="dark"] .css-1o72pil /* sometimes used */ {
+    background-color: #000000 !important;
+    background-image: none !important;
+}
+
+/* Make cards/panels a slightly transparent black if you want contrast (optional) */
+body[data-theme="dark"] .stBlock,
+body[data-theme="dark"] .stCard,
+body[data-theme="dark"] .stMetric {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+/* Keep your other styles unchanged (risk/prediction boxes, buttons, etc.) */
+.big-font {
+    font-size: 50px !important;
+    font-weight: bold;
+    color: #1e3a8a;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+.prediction-box {
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.low-risk { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+.medium-risk { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; }
+.high-risk { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+.info-box { background: #e0f2fe; padding: 15px; border-left: 4px solid #0284c7; border-radius: 5px; margin: 10px 0; }
+.stButton>button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 10px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s; }
+.stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+.status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+.status-ready { background: #10b981; color: white; }
+</style>
 """, unsafe_allow_html=True)
 
 @st.cache_resource
